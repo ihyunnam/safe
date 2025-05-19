@@ -1,3 +1,5 @@
+use std::println;
+
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -114,7 +116,10 @@ where
         // Note: This will return an error if the IO-pattern is invalid.
         let iopattern: Vec<Call> = iopattern.into();
         let mut safe = safe;
-        let tag = safe.tag(&tag_input(&iopattern, domain_sep)?);
+        let tag_input = tag_input(&iopattern, domain_sep)?;
+        let tag = safe.tag(&tag_input);
+        println!("tag input {:?}", tag_input);
+        // println!("tag {:?}", tag.to_bytes_be());
         let state = S::initialized_state(tag);
 
         Ok(Self {
@@ -202,10 +207,13 @@ where
 
         // Set squeeze position to rate to force a permutation at the next
         // call to squeeze
+        // println!("state {:?}", self.state);
+        println!("pos_absorb {:?}", self.pos_absorb);
         self.pos_squeeze = Self::RATE;
-
+        println!("pos_squeeze {:?}", self.pos_squeeze);
         // Increase the position for the IO-pattern
         self.io_count += 1;
+        println!("io count {:?}", self.io_count);
 
         Ok(())
     }
