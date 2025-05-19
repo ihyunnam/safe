@@ -76,7 +76,7 @@ fn tag_input(
     // the vec
     let mut input_u32 = Vec::new();
     input_u32.push(ABSORB_MASK);
-
+    
     // Aggregate and encode calls to absorb and squeeze
     iopattern.as_ref().iter().for_each(|call| {
         // get a mutable ref to the previously encoded call
@@ -99,16 +99,16 @@ fn tag_input(
             Call::Squeeze(len) => input_u32.push(*len as u32),
         }
     });
-
+    println!("input_u32 after calls {:?}", input_u32);
     // Convert hash input to an array of u8, using big endian conversion
     let mut input: Vec<u8> = input_u32
         .iter()
         .flat_map(|u32_int| u32_int.to_be_bytes().into_iter())
         .collect();
-
+    println!("input_u8 after conversion {:?}", input);
     // Add the domain separator to the hash input
     input.extend(domain_sep.to_be_bytes());
-
+    println!("after extension with domain {:?}", input);
     Ok(input)
 }
 
